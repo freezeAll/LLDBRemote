@@ -1,6 +1,7 @@
 package top.berialsloth.lldbremote;
 import com.intellij.execution.Executor;
 import com.intellij.execution.configurations.ConfigurationFactory;
+
 import com.intellij.execution.configurations.RuntimeConfigurationException;
 import com.intellij.execution.runners.ExecutionEnvironment;
 import com.intellij.openapi.project.Project;
@@ -33,6 +34,7 @@ public class LLDBRemoteConfiguration extends CMakeAppRunConfiguration implements
     private DownloadType downloadType = DownloadType.ALWAYS;
     private ResetType resetType = DEFAULT_RESET;
 */
+    private static final String lldbRemoteTag = "LLDB Remote";
 //LLDB 二进制文件路径
     private static final String attrLLDBBinaryPath = "LLDB Binary Path";
     private String LLDBBinaryPath = "";
@@ -54,7 +56,7 @@ public class LLDBRemoteConfiguration extends CMakeAppRunConfiguration implements
     }
 
     //LLDB远程工作目录
-    private static final String attrRemoteWorkingDir = "remote working directory";
+    private static final String attrRemoteWorkingDir = "Remote Working Directory";
     private String remoteWorkingDir = "";
     public String getRemoteWorkingDir() {
         return remoteWorkingDir;
@@ -64,6 +66,7 @@ public class LLDBRemoteConfiguration extends CMakeAppRunConfiguration implements
     }
 
     //LLDB将要连接的远程平台
+    private static final String attrRemotePlatform = "Remote Platform";
     private RemotePlatform remotePlatform;
     public RemotePlatform getRemotePlatform() {
         return remotePlatform;
@@ -138,13 +141,12 @@ public class LLDBRemoteConfiguration extends CMakeAppRunConfiguration implements
     @Override
     public void readExternal(@NotNull Element parentElement) throws InvalidDataException {
         super.readExternal(parentElement);
-        Element element = parentElement.getChild(TAG_OPENOCD);
+        Element element = parentElement.getChild(lldbRemoteTag);
         if(element!=null) {
-            boardConfigFile = element.getAttributeValue(ATTR_BOARD_CONFIG);
-            gdbPort = readIntAttr(element, ATTR_GDB_PORT, DEF_GDB_PORT);
-            telnetPort = readIntAttr(element, ATTR_TELNET_PORT, DEF_TELNET_PORT);
-            resetType = readEnumAttr(element, ATTR_RESET_TYPE, DEFAULT_RESET);
-            downloadType = readEnumAttr(element, ATTR_DOWNLOAD_TYPE, DownloadType.ALWAYS);
+            LLDBBinaryPath = element.getAttributeValue(attrLLDBBinaryPath);
+            LLDBInitUrl = element.getAttributeValue(attrLLDBInitUrl);
+            remoteWorkingDir = element.getAttributeValue( attrRemoteWorkingDir);
+            remotePlatform = (RemotePlatform)Enum.valueOf(remotePlatform.getDeclaringClass(),element.getAttributeValue( attrRemotePlatform));
         }
     }
 
@@ -168,17 +170,14 @@ public class LLDBRemoteConfiguration extends CMakeAppRunConfiguration implements
     @Override
     public void writeExternal(@NotNull Element parentElement) throws WriteExternalException {
         super.writeExternal(parentElement);
-        Element element = new Element(TAG_OPENOCD);
+        Element element = new Element(lldbRemoteTag);
         parentElement.addContent(element);
-        element.setAttribute(ATTR_GDB_PORT, "" + gdbPort);
-        element.setAttribute(ATTR_TELNET_PORT, "" + telnetPort);
-        if (boardConfigFile != null) {
-            element.setAttribute(ATTR_BOARD_CONFIG, boardConfigFile);
-        }
-        element.setAttribute(ATTR_RESET_TYPE, resetType.name());
-        element.setAttribute(ATTR_DOWNLOAD_TYPE, downloadType.name());
+        element.setAttribute(attrLLDBBinaryPath, LLDBBinaryPath);
+        element.setAttribute(attrLLDBInitUrl, LLDBInitUrl);
+        element.setAttribute(attrRemoteWorkingDir, remoteWorkingDir);
+        element.setAttribute(attrRemotePlatform, remotePlatform.name());
     }
-
+/*
     @Override
     public void checkConfiguration() throws RuntimeConfigurationException {
         super.checkConfiguration();
@@ -191,7 +190,7 @@ public class LLDBRemoteConfiguration extends CMakeAppRunConfiguration implements
             throw new RuntimeConfigurationException("Board config file is not defined");
         }
     }
-
+*/
     private void checkPort(int port) throws RuntimeConfigurationException {
         if (port <= 1024 || port > 65535)
             throw new RuntimeConfigurationException("Port value must be in the range [1024...65535]");
