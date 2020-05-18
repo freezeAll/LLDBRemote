@@ -1,0 +1,40 @@
+<idea-plugin>
+  <id>top.berialsloth.lldbremote</id>
+  <name>LLDB Remote</name>
+  <version>1.0</version>
+  <vendor email="berial130sloth@gmail.com" url="https://github.com/freezeAll">None</vendor>
+
+  <description><![CDATA[
+      The Clion LLDB Remote plugin.<br>
+      <em>......................................</em>
+    ]]></description>
+
+  <change-notes><![CDATA[
+      None...............................<br>
+      <em>None........................</em>
+    ]]>
+  </change-notes>
+
+  <!-- please see https://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html for description -->
+  <idea-version since-build="173.0"/>
+
+  <!-- please see https://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
+       on how to target different products -->
+  <depends>com.intellij.modules.clion</depends>
+
+  <extensions defaultExtensionNs="com.intellij">
+    <!-- Add your extensions here -->
+      <configurationType implementation="top.berialsloth.lldbremote.LLDBRemoteConfigurationType" />
+  </extensions>
+
+
+
+
+  <actions>
+    <!-- Add your actions here -->
+    <action id="HelloActionID" class="HelloAction" text="Hello plugin">
+      <add-to-group group-id="ToolsMenu" anchor="first"/>
+    </action>
+  </actions>
+
+</idea-plugin>
