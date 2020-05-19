@@ -24,7 +24,8 @@
 
   <extensions defaultExtensionNs="com.intellij">
     <!-- Add your extensions here -->
-      <configurationType implementation="top.berialsloth.lldbremote.DemoRunConfigurationType" />
+      <configurationType implementation="top.berialsloth.lldbremote.LLDBRemoteRunConfigurationType" />
+
   </extensions>
 
 
