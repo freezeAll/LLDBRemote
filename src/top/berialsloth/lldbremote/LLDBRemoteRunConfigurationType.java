@@ -44,8 +44,8 @@ public class LLDBRemoteRunConfigurationType extends CMakeRunConfigurationType {
   public LLDBRemoteRunConfigurationType() {
     super(TYPE_ID,
             FACTORY_ID,
-            "OpenOCD Download & Run",
-            "Downloads and Runs Embedded Applications using OpenOCD",
+            "LLDB Remote Debug",
+            "Use LLDB platform",
             ICON);
 
     factory = new ConfigurationFactory(this) {
