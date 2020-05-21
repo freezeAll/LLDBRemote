@@ -40,6 +40,6 @@ public class LLDBRemoteDebugProcess extends CidrDebugProcess {
         //return debuggerDriver.loadForLaunch(myRunParameters.getInstaller(),"target create \"C:\\Users\\Administrator\\CLionProjects\\untitled1\\cmake-build-debug\\untitled1.exe\"");
         //debuggerDriver.
         //debuggerDriver.loadForLaunch()
-        return debuggerDriver.loadForLaunch(myRunParameters.getInstaller(),"x86_64");
+        return debuggerDriver.loadForLaunch(myRunParameters.getInstaller(),myRunParameters.getArchitectureId());
     }
 }

@@ -54,6 +54,7 @@ public class LLDBRemoteDebuggerDriver extends LLDBDriver {
         this.projectConfiguration = projectConfiguration;
 
     }
+    /*
     @Override
     public boolean interrupt() throws ExecutionException {
         //return super.interrupt();
@@ -64,7 +65,7 @@ public class LLDBRemoteDebuggerDriver extends LLDBDriver {
         });
         return var1.isNull() ? false : (Boolean)var1.get();
     }
-    /*
+
     @Override
     public DebuggerDriver.Inferior loadForLaunch(@NotNull Installer installer,@NotNull String s) throws ExecutionException {
 
@@ -112,7 +113,9 @@ public class LLDBRemoteDebuggerDriver extends LLDBDriver {
             //return null;
         };
     }
-*/
+
+
+     */
     private long magic(@NotNull GeneralCommandLine var1, @NotNull ThrowableComputable<CompositeRequest, ExecutionException> var2, boolean var3) throws ExecutionException {
         final Ref var6 = new Ref();
         LLDBDriver.ThrowIfNotValid var7 = new LLDBDriver.ThrowIfNotValid<ProtocolResponses.HandleConsoleCommand_Res>(CidrDebuggerBundle.message("lldb.launch.process.fail", new Object[0])) {

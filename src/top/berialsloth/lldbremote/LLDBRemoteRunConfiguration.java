@@ -118,6 +118,6 @@ public class LLDBRemoteRunConfiguration extends CMakeAppRunConfiguration
   public CidrCommandLineState getState(@NotNull Executor executor, @NotNull ExecutionEnvironment environment) {
     CidrCommandLineState state;
 
-    return new CidrCommandLineState(environment, new LLDBRemoteLauncher(this));
+    return new CidrCommandLineState(environment, new LLDBRemoteLauncher(environment,this));
   }
 }
