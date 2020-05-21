@@ -6,6 +6,7 @@ import com.intellij.xdebugger.XDebugProcess;
 import com.intellij.xdebugger.XDebugSession;
 import com.jetbrains.cidr.execution.RunParameters;
 import com.jetbrains.cidr.execution.debugger.CidrDebugProcess;
+import com.jetbrains.cidr.execution.debugger.CidrLocalDebugProcess;
 import com.jetbrains.cidr.execution.debugger.backend.DebuggerCommandException;
 import com.jetbrains.cidr.execution.debugger.backend.DebuggerDriver;
 import org.jetbrains.annotations.NotNull;
@@ -28,25 +29,8 @@ public class LLDBRemoteDebugProcess extends CidrDebugProcess {
         //debuggerDriver.executeConsoleCommand();
         //debuggerDriver.executeConsoleCommand("asd");
         //debuggerDriver.load
-        debuggerDriver.loadForLaunch(myRunParameters.getInstaller(),"x86_64");
-        var commandList = new ArrayList<String>();
-        commandList.add("platform select " + myConfig.getRemotePlatform());
-        commandList.add("platform connect connect://" + myConfig.getLLDBInitUrl());
-        commandList.add("platform setting -w " + myConfig.getRemoteWorkingDir());
-        commandList.add("target create \"C:\\Users\\Administrator\\CLionProjects\\untitled1\\cmake-build-debug\\untitled1.exe\"");
-        commandList.add("target list");
-        //commandList.add("p");
-        //this.getProcessHandler().getProcessInput().
-        try {
-            debuggerDriver.addBreakpoint("main.cpp",4);
-        } catch (DebuggerCommandException debuggerCommandException) {
-            debuggerCommandException.printStackTrace();
-        }
-        commandList.add("run");
+        //debuggerDriver.loadForLaunch(myRunParameters.getInstaller(),"x86_64");
 
-        for (var a: commandList) {
-            this.executeConsoleCommand(a);
-        }
 
         //this.doGetProcessHandler().
         //var inferior =  debuggerDriver.loadForLaunch(myRunParameters.getInstaller(),"");
@@ -55,6 +39,7 @@ public class LLDBRemoteDebugProcess extends CidrDebugProcess {
         //return debuggerDriver.loadForAttach(myConfig.getCMakeTarget().getName(),true);
         //return debuggerDriver.loadForLaunch(myRunParameters.getInstaller(),"target create \"C:\\Users\\Administrator\\CLionProjects\\untitled1\\cmake-build-debug\\untitled1.exe\"");
         //debuggerDriver.
+        //debuggerDriver.loadForLaunch()
         return debuggerDriver.loadForLaunch(myRunParameters.getInstaller(),"x86_64");
     }
 }

@@ -16,9 +16,11 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class LLDBRemoteDebugDriverConfiguration extends LLDBDriverConfiguration {
-    public LLDBRemoteDebugDriverConfiguration()
+    private LLDBRemoteRunConfiguration projectConfiguration;
+    public LLDBRemoteDebugDriverConfiguration(@NotNull LLDBRemoteRunConfiguration projectConfiguration)
     {
         super();
+        this.projectConfiguration = projectConfiguration;
     }
     @Override
     public @NotNull String getDriverName() {
@@ -27,7 +29,9 @@ public class LLDBRemoteDebugDriverConfiguration extends LLDBDriverConfiguration 
 
     @Override
     public @NotNull LLDBDriver createDriver(DebuggerDriver.@NotNull Handler handler, @NotNull ArchitectureType architectureType) throws ExecutionException {
-        var driver = new LLDBRemoteDebuggerDriver(handler,this,architectureType);
+        var driver = new LLDBRemoteDebuggerDriver(handler,this,architectureType,projectConfiguration);
+        //DebuggerDriver.Inferior
+
         return driver;
     }
 

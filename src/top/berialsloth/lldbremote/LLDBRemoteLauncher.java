@@ -6,8 +6,12 @@ import com.intellij.execution.configurations.GeneralCommandLine;
 import com.intellij.execution.configurations.PtyCommandLine;
 import com.intellij.execution.filters.Filter;
 import com.intellij.execution.process.*;
+import com.intellij.execution.ui.ConsoleViewContentType;
 import com.intellij.openapi.project.Project;
 import com.intellij.xdebugger.XDebugSession;
+import com.intellij.xdebugger.impl.XDebugSessionImpl;
+import com.jetbrains.cidr.cpp.execution.CLionLauncher;
+import com.jetbrains.cidr.cpp.execution.CMakeLauncher;
 import com.jetbrains.cidr.cpp.execution.debugger.backend.CLionLLDBDriverConfiguration;
 import com.jetbrains.cidr.cpp.toolchains.CPPDebugger;
 import com.jetbrains.cidr.cpp.toolchains.CPPToolchains;
@@ -15,8 +19,9 @@ import com.jetbrains.cidr.execution.Installer;
 import com.jetbrains.cidr.execution.ProcessOutputListener;
 import com.jetbrains.cidr.execution.RunParameters;
 import com.jetbrains.cidr.execution.debugger.CidrDebugProcess;
-
+import com.jetbrains.cidr.execution.TrivialInstaller;
 import com.jetbrains.cidr.execution.debugger.CidrDebuggerPathManager;
+import com.jetbrains.cidr.execution.debugger.CidrLocalDebugProcess;
 import com.jetbrains.cidr.execution.debugger.backend.DebuggerDriver;
 import com.jetbrains.cidr.execution.debugger.backend.DebuggerDriverConfiguration;
 import com.jetbrains.cidr.execution.debugger.backend.lldb.LLDBDriver;
@@ -24,6 +29,7 @@ import com.jetbrains.cidr.execution.debugger.backend.lldb.LLDBDriverConfiguratio
 import com.jetbrains.cidr.execution.debugger.remote.CidrRemoteDebugParameters;
 import com.jetbrains.cidr.execution.debugger.remote.CidrRemoteGDBDebugProcess;
 import com.jetbrains.cidr.execution.testing.CidrLauncher;
+
 import org.apache.xerces.xs.StringList;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -51,6 +57,7 @@ public class LLDBRemoteLauncher extends CidrLauncher {
         //ProcessAdapter adapter = new ProcessAdapter();
         //adapter.
         //adapter.startNotified();
+
         osProcessHandler.addProcessListener(new ProcessAdapter() {
 
             @Override
@@ -111,7 +118,7 @@ public class LLDBRemoteLauncher extends CidrLauncher {
 
         CPPDebugger cppDebugger = CPPDebugger.bundledLldb();
         toolChains.setDebugger(cppDebugger);
-        var lldbDriver = new LLDBRemoteDebugDriverConfiguration();
+        var lldbDriver = new LLDBRemoteDebugDriverConfiguration(myConfiguration);
         //LLDBRemoteRunConfiguration(,)
         var drive = new LLDBDriverConfiguration();
         var hostMachine = lldbDriver.getHostMachine();
@@ -122,8 +129,13 @@ public class LLDBRemoteLauncher extends CidrLauncher {
         System.out.println(lldbDriver.getHostMachine().isRemote());
         System.out.println(lldbDriver.getHostMachine().getName());
         System.out.println(lldbDriver.getHostMachine().getHostId());
+        var pl = lldbDriver.getHostMachine().getProcessList();
+        CLionLauncher
+        var cl = new GeneralCommandLine()
+                .withExePath("C:\\Users\\Administrator\\CLionProjects\\untitled1\\cmake-build-debug\\untitled1.exe");
+        //xDebugSession.getConsoleView().print("ASDASDASDA", ConsoleViewContentType.NORMAL_OUTPUT);
         //lldbDriver.createDebugProcessHandler()
-        LLDBRemoteRunParameters parameters = new LLDBRemoteRunParameters(lldbDriver,commandLineState,myConfiguration);
+        LLDBRemoteRunParameters parameters = new LLDBRemoteRunParameters(lldbDriver,cl,myConfiguration);
         //parameters.setAdditionalCommands(commandList);
         //CLionLLDBDriverConfiguration
 
@@ -149,12 +161,10 @@ public class LLDBRemoteLauncher extends CidrLauncher {
 
         return commandLine;
     }
-
     @Override
     public CidrDebugProcess startDebugProcess(@NotNull CommandLineState commandLineState,
                                               @NotNull XDebugSession xDebugSession) throws ExecutionException {
 
-       //var debug = xDebugSession.getDebugProcess();
         return super.startDebugProcess(commandLineState,xDebugSession);
     }
 }

@@ -5,6 +5,7 @@ package  top.berialsloth.lldbremote;
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.Executor;
 import com.intellij.execution.configurations.*;
+import com.intellij.execution.executors.DefaultDebugExecutor;
 import com.intellij.execution.process.OSProcessHandler;
 import com.intellij.execution.process.ProcessHandler;
 import com.intellij.execution.process.ProcessHandlerFactory;
@@ -115,6 +116,7 @@ public class LLDBRemoteRunConfiguration extends CMakeAppRunConfiguration
   @Nullable
   @Override
   public CidrCommandLineState getState(@NotNull Executor executor, @NotNull ExecutionEnvironment environment) {
+    CidrCommandLineState state;
 
     return new CidrCommandLineState(environment, new LLDBRemoteLauncher(this));
   }
