@@ -2,13 +2,11 @@ package top.berialsloth.lldbremote;
 
 import com.intellij.execution.CommonProgramRunConfigurationParameters;
 import com.intellij.execution.ExecutionException;
-import com.intellij.execution.configurations.CommandLineState;
-import com.intellij.execution.configurations.GeneralCommandLine;
-import com.intellij.execution.configurations.PtyCommandLine;
-import com.intellij.execution.configurations.SimpleProgramParameters;
+import com.intellij.execution.configurations.*;
 import com.intellij.execution.filters.Filter;
 import com.intellij.execution.process.*;
 import com.intellij.execution.runners.ExecutionEnvironment;
+import com.intellij.execution.runners.ProgramRunner;
 import com.intellij.execution.ui.ConsoleViewContentType;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
@@ -57,6 +55,7 @@ import java.util.*;
 import static com.sun.jna.platform.win32.Advapi32Util.EventLogType.Informational;
 
 public class LLDBRemoteLauncher extends CMakeLauncher {
+    private CidrRunConfigurationExtensionsManager myExtensionsManager = CidrRunConfigurationExtensionsManager.getInstance();
 
     private LLDBRemoteRunConfiguration myConfiguration;
     private ExecutionEnvironment myEnvironment;
@@ -122,54 +121,63 @@ public class LLDBRemoteLauncher extends CMakeLauncher {
 
     @Override
     public @NotNull CidrDebugProcess createDebugProcess(@NotNull CommandLineState commandLineState, @NotNull XDebugSession xDebugSession) throws ExecutionException {
-        //CidrDebugProcess process;
-        //process.
-        //new CidrDebugProcess.DebuggerCommand<Cidr>(,,);
+        //CLionLauncher
         var pair = CMakeRunConfigurationUtil.getRunFileAndEnvironment(this);
         CPPEnvironment environment = (CPPEnvironment)pair.component2();
-        //environment.
-        var runner = commandLineState.getEnvironment().getRunner();
-        var toolChains = CPPToolchains.getInstance().getDefaultToolchain();
 
-        //CPPDebugger cppDebugger = CPPDebugger.create(CPPDebugger.Kind.BUNDLED_LLDB,myConfiguration.getLLDBBinaryPath());
-        //toolChains.setDebugger(cppDebugger);
+        RunnerSettings runnerSettings = this.myEnvironment.getRunnerSettings();
+        ProgramRunner programRunner = this.myEnvironment.getRunner();
+        //xDebugSession.stop();
 
-        xDebugSession.stop();
-
-        //parameters.setRemoteCommand("platform select remote-windows");
-        toolChains = toolChains.copy();
-        //File lldbFile =new File( myConfiguration.getLLDBBinaryPath());
-        //gdbPath = gdbFile.getAbsolutePath();
+        var configurationExtensionContext = new ConfigurationExtensionContext();
+       // CidrLocalDebugProcess
 
         GeneralCommandLine commandLine = this.createCommandLine(commandLineState, pair.component1(), environment, false);
-        CPPDebugger cppDebugger = CPPDebugger.bundledLldb();
-        toolChains.setDebugger(cppDebugger);
-        //var lldbDriver = new LLDBRemoteDebugDriverConfiguration(myConfiguration);
-        //LLDBRemoteRunConfiguration(,)
-        var drive = new LLDBDriverConfiguration();
-        //var hostMachine = lldbDriver.getHostMachine();
-        //lldbDriver.getHostMachine().isRemote();
-        //lldbDriver.getHostMachine().getName();
-        //lldbDriver.getHostMachine().getHostId();
-        //drive.getHostMachine()
-        //System.out.println(lldbDriver.getHostMachine().isRemote());
-        //System.out.println(lldbDriver.getHostMachine().getName());
-        //System.out.println(lldbDriver.getHostMachine().getHostId());
-        //var pl = lldbDriver.getHostMachine().getProcessList();
 
-        //xDebugSession.getConsoleView().print("ASDASDASDA", ConsoleViewContentType.NORMAL_OUTPUT);
-        //lldbDriver.createDebugProcessHandler()
-        //getDe
-        //parameters.setAdditionalCommands(commandList);
-        //CLionLLDBDriverConfiguration
+        this.myExtensionsManager.patchCommandLine(this.getConfiguration(),runnerSettings, (CidrToolEnvironment)environment,commandLine,programRunner.getRunnerId(),configurationExtensionContext);
+        environment.convertPathVariableToEnv(commandLine);
+        commandLineState.setConsoleBuilder(this.createConsoleBuilder(commandLineState, (CidrToolEnvironment)environment,getProjectBaseDir()));
+        this.myExtensionsManager.patchCommandLineState(this.getConfiguration(), runnerSettings, (CidrToolEnvironment)environment, getProjectBaseDir(), commandLineState, programRunner.getRunnerId(), configurationExtensionContext);
+        CidrDebugConsoleFilterProvider filterProvider = new CidrDebugConsoleFilterProvider((CidrToolEnvironment)environment,getProjectBaseDir() != null ? getProjectBaseDir().toPath() : null);
 
-        LLDBRemoteDebugProcess debugProcess = new LLDBRemoteDebugProcess(createDebugParameters(environment,commandLine),xDebugSession,commandLineState.getConsoleBuilder(),myConfiguration);
+        LLDBRemoteDebugProcess debugProcess = new LLDBRemoteDebugProcess(createDebugParameters(environment,commandLine),xDebugSession,commandLineState.getConsoleBuilder(),myConfiguration,filterProvider);
         var listener = new ProcessOutputListener();
-        //CLionLauncher
-        //debugProcess.getProcessHandler().addProcessListener();
-        //lldbDriver
-        //LLDBRemoteDebugProcess debugProcess = new LLDBRemoteDebugProcess(lldbDriver,xDebugSession,commandLineState.getConsoleBuilder(),myConfiguration);
+        configProcessHandler(debugProcess.getProcessHandler(), debugProcess.isDetachDefault(), true, this.getProject());
+        this.myExtensionsManager.attachExtensionsToProcess(this.getConfiguration(), debugProcess.getProcessHandler(), (CidrToolEnvironment)environment,runnerSettings,programRunner.getRunnerId(),configurationExtensionContext);
+
         return debugProcess;
+
+
+        //return super.createDebugProcess(commandLineState,xDebugSession);
+
+/*
+      Intrinsics.checkParameterIsNotNull(state, "state");
+      Intrinsics.checkParameterIsNotNull(session, "session");
+      Pair var7 = this.getRunFileAndEnvironment();
+      File var5 = (File)var7.component1();
+      CPPEnvironment var6 = (CPPEnvironment)var7.component2();
+      RunnerSettings var17 = this.executionEnvironment.getRunnerSettings();
+      ProgramRunner var10000 = this.executionEnvironment.getRunner();
+      Intrinsics.checkExpressionValueIsNotNull(var10000, "executionEnvironment.runner");
+      ProgramRunner var8 = var10000;
+      String var16 = var8.getRunnerId();
+      Intrinsics.checkExpressionValueIsNotNull(var16, "runner.runnerId");
+      String var9 = var16;
+      ConfigurationExtensionContext var10 = new ConfigurationExtensionContext();
+      GeneralCommandLine var11 = this.createCommandLine(state, var5, var6, false);
+      this.extensionManager.patchCommandLine(this.getConfiguration(), var17, (CidrToolEnvironment)var6, var11, var9, var10);
+      var6.convertPathVariableToEnv(var11);
+      File var12 = this.getProjectBaseDir();
+      state.setConsoleBuilder(this.createConsoleBuilder(state, (CidrToolEnvironment)var6, var12));
+      this.extensionManager.patchCommandLineState(this.getConfiguration(), var17, (CidrToolEnvironment)var6, var12, state, var9, var10);
+      CidrDebugConsoleFilterProvider var13 = new CidrDebugConsoleFilterProvider((CidrToolEnvironment)var6, var12 != null ? var12.toPath() : null);
+      RunParameters var14 = this.getDebugParameters(var6, var11);
+      CidrLocalDebugProcess var15 = new CidrLocalDebugProcess(var14, session, state.getConsoleBuilder(), (ConsoleFilterProvider)var13);
+      access$configProcessHandler$s946776916(var15.getProcessHandler(), var15.isDetachDefault(), true, this.getProject());
+      this.extensionManager.attachExtensionsToProcess(this.getConfiguration(), var15.getProcessHandler(), (CidrToolEnvironment)var6, var17, var9, var10);
+
+
+ */
     }
    @NotNull
     protected GeneralCommandLine createCommandLine(@NotNull CommandLineState state, @NotNull File runFile, @NotNull final CPPEnvironment environment, final boolean usePty) throws ExecutionException {
@@ -221,13 +229,15 @@ public class LLDBRemoteLauncher extends CMakeLauncher {
         return commandLine;
     }
 
-
+/*
     @Override
     public CidrDebugProcess startDebugProcess(@NotNull CommandLineState commandLineState,
                                               @NotNull XDebugSession xDebugSession) throws ExecutionException {
 
         return super.startDebugProcess(commandLineState,xDebugSession);
     }
+   */
+
     @NotNull
     protected  RunParameters createDebugParameters(@NotNull CPPEnvironment environment, @NotNull GeneralCommandLine cl) throws ExecutionException {
         //long var3 = a ^ 8792920826309L;
