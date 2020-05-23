@@ -28,16 +28,13 @@ import com.jetbrains.cidr.execution.CidrRunConfiguration;
 import com.jetbrains.cidr.execution.CidrCommandLineState;
 import com.jetbrains.cidr.execution.CidrExecutableDataHolder;
 
-public class LLDBRemoteRunConfiguration extends CMakeAppRunConfiguration
-        implements CidrExecutableDataHolder{
+public class LLDBRemoteRunConfiguration extends CMakeAppRunConfiguration implements CidrExecutableDataHolder{
+
   protected LLDBRemoteRunConfiguration(Project project, ConfigurationFactory factory, String name) {
     super(project, factory, name);
-
-    var opt = getOptions();
   }
 
   private static final String lldbRemoteTag = "LLDB_Remote";
-  //private StoredProperty<String> lldbRemoteTag = RunConfigurationOptions.S("").provideDelegate(this, "scriptName");
   private Pair<String,String> LLDBBinaryPath = new Pair("LLDBBinaryPath","");
   private Pair<String,String> remoteWorkingDir = new Pair("remoteWorkingDir","");
   private Pair<String,String> LLDBInitUrl = new Pair("LLDBInitUrl","");
@@ -92,7 +89,6 @@ public class LLDBRemoteRunConfiguration extends CMakeAppRunConfiguration
     remoteWorkingDir = new Pair(remoteWorkingDir.getFirst(),inp);
   }
 
-
   @NotNull
   @Override
   public SettingsEditor<? extends RunConfiguration> getConfigurationEditor() {
@@ -113,6 +109,7 @@ public class LLDBRemoteRunConfiguration extends CMakeAppRunConfiguration
     element.setAttribute(remoteWorkingDir.getFirst(), remoteWorkingDir.getSecond());
     element.setAttribute(remotePlatform.getFirst(), remotePlatform.getSecond());
   }
+
   @Nullable
   @Override
   public CidrCommandLineState getState(@NotNull Executor executor, @NotNull ExecutionEnvironment environment) {
@@ -120,4 +117,5 @@ public class LLDBRemoteRunConfiguration extends CMakeAppRunConfiguration
 
     return new CidrCommandLineState(environment, new LLDBRemoteLauncher(environment,this));
   }
+
 }

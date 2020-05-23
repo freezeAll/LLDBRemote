@@ -1,22 +1,22 @@
 <idea-plugin>
   <id>top.berialsloth.lldbremote</id>
   <name>LLDB Remote</name>
-  <version>1.0</version>
-  <vendor email="berial130sloth@gmail.com" url="https://github.com/freezeAll">None</vendor>
+  <version>1.0.4</version>
+  <vendor email="berial130sloth@gmail.com" url="https://github.com/freezeAll">freezeAll</vendor>
 
   <description><![CDATA[
-      The Clion LLDB Remote plugin.<br>
-      <em>......................................</em>
+      Clion LLDB Remote plugin. README here-> https://gitee.com/freezeall/LLDBRemote<br>
+      Use lldb command 'platform connect'.At run use 'process launch' send local target to connected remote machine.<br>
     ]]></description>
 
   <change-notes><![CDATA[
-      None...............................<br>
-      <em>None........................</em>
+      <em>1.0.3 2020_5_22 fix class version</em><br>
+      <em>1.0.4 2020_5_23 add description,delete tag'lldb binary path'</em><br>
     ]]>
   </change-notes>
 
   <!-- please see https://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html for description -->
-  <idea-version since-build="173.0"/>
+  <idea-version since-build="201.1"/>
 
   <!-- please see https://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
        on how to target different products -->
@@ -25,17 +25,6 @@
   <extensions defaultExtensionNs="com.intellij">
     <!-- Add your extensions here -->
       <configurationType implementation="top.berialsloth.lldbremote.LLDBRemoteRunConfigurationType" />
-
   </extensions>
-
-
-
-
-  <actions>
-    <!-- Add your actions here -->
-    <action id="HelloActionID" class="HelloAction" text="Hello plugin">
-      <add-to-group group-id="ToolsMenu" anchor="first"/>
-    </action>
-  </actions>
 
 </idea-plugin>

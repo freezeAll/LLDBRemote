@@ -3,7 +3,6 @@
 package top.berialsloth.lldbremote;
 
 import com.intellij.openapi.options.ConfigurationException;
-import com.intellij.openapi.options.SettingsEditor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.ComboBox;
 import com.intellij.openapi.ui.LabeledComponent;
@@ -14,20 +13,18 @@ import com.jetbrains.cidr.cpp.execution.CMakeAppRunConfiguration;
 import com.jetbrains.cidr.cpp.execution.CMakeAppRunConfigurationSettingsEditor;
 import com.jetbrains.cidr.cpp.execution.CMakeBuildConfigurationHelper;
 import org.jetbrains.annotations.NotNull;
-
 import javax.swing.*;
 
 public class LLDBRemoteSettingsEditor extends CMakeAppRunConfigurationSettingsEditor {
+
     private LabeledComponent<TextFieldWithBrowseButton> lldbBinaryPath;
     private LabeledComponent<EditorTextField> initUrl;
     private LabeledComponent<ComboBox> remotePlatform;
     private LabeledComponent<EditorTextField> remoteWorkingDir;
 
-
     public LLDBRemoteSettingsEditor(Project project, @NotNull CMakeBuildConfigurationHelper cMakeBuildConfigurationHelper) {
         super(project, cMakeBuildConfigurationHelper);
     }
-
 
     @Override
     protected void resetEditorFrom(CMakeAppRunConfiguration cmakeConfig) {
@@ -49,7 +46,6 @@ public class LLDBRemoteSettingsEditor extends CMakeAppRunConfigurationSettingsEd
         config.setRemoteWorkingDir(remoteWorkingDir.getComponent().getText());
     }
 
-
     @NotNull
     protected void createEditorInner(JPanel panel, GridBag gridBag)
     {
@@ -59,7 +55,7 @@ public class LLDBRemoteSettingsEditor extends CMakeAppRunConfigurationSettingsEd
         lldbBinaryPath.setText("LLDB Binary Path");
         lldbBinaryPath.setComponent(new TextFieldWithBrowseButton());
         initUrl = new LabeledComponent<>();
-        initUrl.setText("'target connect'arg");
+        initUrl.setText("'platform connect'arg");
         initUrl.setLabelLocation("West");
         initUrl.setComponent(new EditorTextField());
         remotePlatform = new LabeledComponent<>();
@@ -71,11 +67,10 @@ public class LLDBRemoteSettingsEditor extends CMakeAppRunConfigurationSettingsEd
         remoteWorkingDir.setText("'platform setting -w' arg");
         remoteWorkingDir.setLabelLocation("West");
         remoteWorkingDir.setComponent(new EditorTextField());
-        panel.add(lldbBinaryPath,gridBag.nextLine());
+        //panel.add(lldbBinaryPath,gridBag.nextLine());
         panel.add(initUrl,gridBag.nextLine());
         panel.add(remotePlatform,gridBag.nextLine());
         panel.add(remoteWorkingDir,gridBag.nextLine());
     }
-
 
 }

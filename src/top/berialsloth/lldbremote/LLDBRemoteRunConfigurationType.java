@@ -69,17 +69,16 @@ public class LLDBRemoteRunConfigurationType extends CMakeRunConfigurationType {
     };
   }
 
-
   private final ConfigurationFactory factory;
 
   @Override
   public Icon getIcon() {
     return AllIcons.General.Information;
   }
+
   @NotNull
   @Override
-  protected LLDBRemoteRunConfiguration createRunConfiguration(@NotNull Project project,
-                                                        @NotNull ConfigurationFactory configurationFactory) {
+  protected LLDBRemoteRunConfiguration createRunConfiguration(@NotNull Project project, @NotNull ConfigurationFactory configurationFactory) {
     return new LLDBRemoteRunConfiguration(project, factory, "");
   }
 }
